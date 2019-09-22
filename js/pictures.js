@@ -36,6 +36,7 @@ var getComments = function () {
     if (usingIndexComments.length === comments.length) {
       break;
     }
+
     var comment1 = getRandomNumber(comments.length);
     var comment2 = getRandomNumber(comments.length);
 
@@ -87,8 +88,15 @@ var getDescription = function () {
   return descriptions[getRandomNumber(descriptions.length)];
 }
 
-var getPicturesData = function (amoutOfDataPictures) {
-  for (var i = 0; i < amoutOfDataPictures; i++) {
+var pictureTemplate = document.querySelector('#picture').content.querySelector('.picture');
+
+var fragment = document.createDocumentFragment();
+
+var pictureList = document.querySelector('.pictures');
+
+var createPictureElements = function (amoutOfDataPictures) {
+  var initialPictures = pictures.length;
+  for (var i = initialPictures === 0 ? 0 : initialPictures - 1; i < amoutOfDataPictures + initialPictures; i++) {
     pictures.push(
       {
         url: getRandomUrl(25),
@@ -97,7 +105,31 @@ var getPicturesData = function (amoutOfDataPictures) {
         description: getDescription()
       }
     );
+
+    var pictureElement = pictureTemplate.cloneNode(true);
+
+    pictureElement.querySelector('.picture__img').src = pictures[i].url;
+    
+    pictureElement.querySelector('.picture__comments').textContent = pictures[i].comments.length;
+
+    pictureElement.querySelector('.picture__likes').textContent = pictures[i].likes;
+
+    fragment.appendChild(pictureElement);
+
   }
+
+  pictureList.appendChild(fragment);
+
+  var fullScreenImg = document.querySelector('.big-picture');
+
+  fullScreenImg.classList.remove('hidden');
+
+  fullScreenImg.querySelector('.big-picture__img').src = pictures[0].url;
+
+  fullScreenImg.querySelector('.likes-count').textContent = pictures[0].likes;
+
+  fullScreenImg.querySelector('.comments-count').textContent = pictures[0].comments.length;
+
 };
 
-getPicturesData(5);
+createPictureElements(5);
