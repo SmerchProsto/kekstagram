@@ -37,37 +37,18 @@ var getComments = function () {
       break;
     }
 
-    var comment1 = getRandomNumber(comments.length);
-    var comment2 = getRandomNumber(comments.length);
-
-    while (comment1 === comment2) {
-      comment1 = getRandomNumber(comments.length);
-      comment2 = getRandomNumber(comments.length)
-    }
+    var comment = getRandomNumber(comments.length);
 
     // Проверка комментариев на повторы
     for (var j = 0; j < usingIndexComments.length; j++) {
-      while (comment1 === usingIndexComments[j] || comment2 === usingIndexComments[j] || comment1 === comment2) {
-        if (comment1 === usingIndexComments[j]) {
-          comment1 = getRandomNumber(comments.length);
-        }
-
-        if (comment2 === usingIndexComments[j]) {
-          comment2 = getRandomNumber(comments.length);
-        }
-
-        if (comment1 === comment2) {
-          comment1 = getRandomNumber(comments.length);
-          comment2 = getRandomNumber(comments.length);
-        }
-
-        j = -1;
+      if (comment === usingIndexComments[j]) {
+        comment = getRandomNumber(comments.length);
+        j = 0;
       }
     }
 
-    var newRandomComment = comments[comment1] + ' ' + comments[comment2];
-    usingIndexComments.push(comment1);
-    usingIndexComments.push(comment2);
+    var newRandomComment = comments[comment];
+    usingIndexComments.push(comment);
 
     finalComments.push(newRandomComment);
   }
