@@ -1,5 +1,3 @@
-var pictures = [];
-
 var getRandomNumber = function (maxNumber, includeMaxNumber, includeZero) {
   var randomNumber = Math.round(Math.random() * maxNumber);
   if (includeMaxNumber && includeZero) {
@@ -20,19 +18,19 @@ var getRandomNumber = function (maxNumber, includeMaxNumber, includeZero) {
     while (randomNumber === 0) {
       randomNumber = Math.floor(Math.random() * maxNumber);
     }
-  
+
     return randomNumber;
 
   } else if (!includeMaxNumber && includeZero) {
 
     randomNumber = Math.floor(Math.random() * maxNumber);
-    
+
     return randomNumber;
   }
 };
 
 var getRandomUrl = function (numberOfAddress) {
-  return 'photos/' + getRandomNumber(numberOfAddress, true, true) + '.jpg';
+  return 'photos/' + getRandomNumber(numberOfAddress, true, false) + '.jpg';
 };
 
 var getRandomNumberLike = function (maxNumberLike) {
@@ -98,10 +96,12 @@ var fragment = document.createDocumentFragment();
 
 var pictureList = document.querySelector('.pictures');
 
+var fullScreenImg = document.querySelector('.big-picture');
+
 var createPictureElements = function (amoutOfDataPictures) {
-  var initialPictures = pictures.length;
-  for (var i = initialPictures === 0 ? 0 : initialPictures - 1; i < amoutOfDataPictures + initialPictures; i++) {
-    pictures.push(
+  createdPictures = [];
+  for (var i = 0; i < amoutOfDataPictures; i++) {
+    createdPictures.push(
       {
         url: getRandomUrl(25),
         likes: getRandomNumberLike(200),
@@ -112,21 +112,20 @@ var createPictureElements = function (amoutOfDataPictures) {
 
     var pictureElement = pictureTemplate.cloneNode(true);
 
-    pictureElement.querySelector('.picture__img').src = pictures[i].url;
-    
-    pictureElement.querySelector('.picture__comments').textContent = pictures[i].comments.length;
+    pictureElement.querySelector('.picture__img').src = createdPictures[i].url;
 
-    pictureElement.querySelector('.picture__likes').textContent = pictures[i].likes;
+    pictureElement.querySelector('.picture__comments').textContent = createdPictures[i].comments.length;
+
+    pictureElement.querySelector('.picture__likes').textContent = createdPictures[i].likes;
 
     fragment.appendChild(pictureElement);
-
   }
 
   pictureList.appendChild(fragment);
 };
 
-var openFullScreenPicture = function () {
-  var fullScreenImg = document.querySelector('.big-picture');
+var downloadDataToFullImage = function () {
+  var comments = getComments()
 
   var commentsImgCount = fullScreenImg.querySelector('.social__comment-count');
 
@@ -135,29 +134,30 @@ var openFullScreenPicture = function () {
   commentsImgCount.classList.add('visually-hidden');
   commentsLoader.classList.add('visually-hidden');
 
-  fullScreenImg.classList.remove('hidden');
+  fullScreenImg.querySelector('.likes-count').textContent = getRandomNumberLike(200);
 
-  fullScreenImg.querySelector('.big-picture__img').src = pictures[0].url;
-
-  fullScreenImg.querySelector('.likes-count').textContent = pictures[0].likes;
-
-  fullScreenImg.querySelector('.comments-count').textContent = pictures[0].comments.length;
+  fullScreenImg.querySelector('.comments-count').textContent = comments.length;
 
   var socialComments = document.querySelector('.social__comments');
 
-  for (var i = 0; i < pictures[0].comments.length; i++) {
+  for (var i = 0; i < comments.length; i++) {
     var socialComment = socialComments.querySelector('.social__comment').cloneNode(true);
 
     socialComment.querySelector('.social__picture').src = 'img/avatar-' + getRandomNumber(6, true, false) + '.svg';
 
-    socialComment.querySelector('.social__text').textContent = pictures[0].comments[i];
+    socialComment.querySelector('.social__text').textContent = comments[i];
 
     fragment.appendChild(socialComment);
   }
 
-  fullScreenImg.querySelector('.social__caption').textContent = pictures[0].description;
+  fullScreenImg.querySelector('.social__caption').textContent = getDescription();
 
   socialComments.appendChild(fragment);
-  
-}
 
+};
+
+var openFullScreenPicture = function () {
+  fullScreenImg.classList.remove('hidden');
+};
+
+createPictureElements(3);
