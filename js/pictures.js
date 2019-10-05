@@ -165,17 +165,21 @@ var openFullScreenPicture = function () {
 };
 
 var uploadInput = document.querySelector('#upload-file');
-var editImgForm = document.querySelector('.img-upload__overlay');
-var editImgFormCancelBtn = document.querySelector('#upload-cancel');
+
+var editImgForm = {
+  block: document.querySelector('.img-upload__overlay'),
+  cancelBtn: document.querySelector('#upload-cancel'),
+  mainImg: document.querySelector('.img-upload__preview')
+};
 
 var openEditImgForm = function () {
   uploadInput.blur();
-  editImgForm.classList.remove('hidden');
+  editImgForm.block.classList.remove('hidden');
   document.addEventListener('keydown', onEscPress);
 };
 
 var closeEditImgForm = function () {
-  editImgForm.classList.add('hidden');
+  editImgForm.block.classList.add('hidden');
   uploadInput.value = '';
   document.removeEventListener('keydown', onEscPress);
 };
@@ -193,6 +197,44 @@ uploadInput.addEventListener('change', function () {
   openEditImgForm();
 });
 
-editImgFormCancelBtn.addEventListener('click', function () {
+editImgForm.cancelBtn.addEventListener('click', function () {
   closeEditImgForm();
+});
+
+var resizeControl = {
+  minus: editImgForm.block.querySelector('.img-upload__scale .scale__control--smaller'),
+  valueString: editImgForm.block.querySelector('.img-upload__scale .scale__control--value').value,
+  getValueNumber: function () {
+    var numberValue = this.valueString.slice(0, -1);
+    numberValue -= 0;
+    return numberValue;
+  },
+  plus: editImgForm.block.querySelector('.img-upload__scale .scale__control--bigger')
+};
+
+var resizeImage = function (minusOrPlus) {
+  var PERCENT_RESIZING = 25;
+
+  var imgSizeValue = resizeControl.getValueNumber();
+  var isLessThan100 = imgSizeValue + PERCENT_RESIZING <= 100;
+  var isMoreThan0 = imgSizeValue - PERCENT_RESIZING > 0;
+
+  if (minusOrPlus === resizeControl.minus && isMoreThan0) {
+    imgSizeValue -= PERCENT_RESIZING;
+  }
+
+  if (minusOrPlus === resizeControl.plus && isLessThan100) {
+    imgSizeValue += PERCENT_RESIZING;
+  }
+  document.querySelector('.img-upload__scale .scale__control--value').value = imgSizeValue + '%';
+  resizeControl.valueString = imgSizeValue + '%';
+  editImgForm.mainImg.style.transform = 'scale(' + imgSizeValue / 100 + ')';
+};
+
+resizeControl.minus.addEventListener('click', function () {
+  resizeImage(resizeControl.minus);
+});
+
+resizeControl.plus.addEventListener('click', function () {
+  resizeImage(resizeControl.plus);
 });
