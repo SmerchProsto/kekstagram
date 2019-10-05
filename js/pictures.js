@@ -1,3 +1,8 @@
+'use strict';
+
+var ESC_KEYCODE = 27;
+var ENTER_KEYCODE = 13;
+
 var getRandomNumber = function (maxNumber, includeMaxNumber, includeZero) {
   var randomNumber = Math.round(Math.random() * maxNumber);
   if (includeMaxNumber && includeZero) {
@@ -49,7 +54,6 @@ var getComments = function () {
   ];
 
   var finalComments = [];
-
   var usingIndexComments = [];
 
 
@@ -160,4 +164,35 @@ var openFullScreenPicture = function () {
   fullScreenImg.classList.remove('hidden');
 };
 
-createPictureElements(3);
+var uploadInput = document.querySelector('#upload-file');
+var editImgForm = document.querySelector('.img-upload__overlay');
+var editImgFormCancelBtn = document.querySelector('#upload-cancel');
+
+var openEditImgForm = function () {
+  uploadInput.blur();
+  editImgForm.classList.remove('hidden');
+  document.addEventListener('keydown', onEscPress);
+};
+
+var closeEditImgForm = function () {
+  editImgForm.classList.add('hidden');
+  uploadInput.value = '';
+  document.removeEventListener('keydown', onEscPress);
+};
+
+var onEscPress = function (evt) {
+  var isNotAButtons = evt.target.nodeName !== 'INPUT' && evt.target.nodeName !== 'BUTTON' && evt.target.nodeName !== 'TEXTAREA';
+  if (evt.keyCode === ESC_KEYCODE && isNotAButtons) {
+    closeEditImgForm();
+  } else {
+    evt.stopPropagation();
+  }
+};
+
+uploadInput.addEventListener('change', function () {
+  openEditImgForm();
+});
+
+editImgFormCancelBtn.addEventListener('click', function () {
+  closeEditImgForm();
+});
