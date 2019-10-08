@@ -240,20 +240,11 @@ resizeControl.plus.addEventListener('click', function () {
   resizeImage(resizeControl.plus);
 });
 
-var checkFilterClasses = function (constCssClass) {
-  var differentCssClasses = editImgForm.mainImg.classList;
-  var differentCssClassesLength = differentCssClasses.length;
-
-  if (differentCssClassesLength === 1 && differentCssClasses[0] === constCssClass) {
-    return;
-  }
-
-  for (var i = 0; i < differentCssClassesLength; i++) {
-    differentCssClasses.remove(differentCssClasses[i]);
-  }
-
-  differentCssClasses.add(constCssClass);
-}
+var effectSlider = {
+  slider: document.querySelector('.img-upload__effect-level'),
+  value: document.querySelector('.effect-level__value'),
+  range: document.querySelector('.effect-level__pin')
+};
 
 var effects = [
   document.querySelector('#effect-none'),
@@ -263,6 +254,30 @@ var effects = [
   document.querySelector('#effect-phobos'),
   document.querySelector('#effect-heat')
 ];
+
+
+var checkFilterClasses = function (constCssClass) {
+  var differentCssClasses = editImgForm.mainImg.classList;
+  var differentCssClassesLength = differentCssClasses.length;
+
+  var effectsCssClasses = effectSlider.slider.classList;
+
+  if (differentCssClassesLength === 1 && differentCssClasses[0] === constCssClass) {
+    return;
+  }
+
+  if (constCssClass === 'effects__preview--none') {
+    effectsCssClasses.add('hidden');
+  } else {
+    effectsCssClasses.remove('hidden');
+  }
+
+  for (var i = 0; i < differentCssClassesLength; i++) {
+    differentCssClasses.remove(differentCssClasses[i]);
+  }
+
+  differentCssClasses.add(constCssClass);
+}
 
 effects[0].addEventListener('click', function () {
   checkFilterClasses('effects__preview--none');
@@ -306,6 +321,3 @@ effects[5].addEventListener('click', function () {
 //   editImgForm.mainImg.style.filter = '';
 
 // });
-
-var effectRange = document.querySelector('effect-level__pin');
-var effectValue = document.querySelector('effect-level__value');
