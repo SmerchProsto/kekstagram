@@ -169,7 +169,8 @@ var uploadInput = document.querySelector('#upload-file');
 var editImgForm = {
   block: document.querySelector('.img-upload__overlay'),
   cancelBtn: document.querySelector('#upload-cancel'),
-  mainImg: document.querySelector('.img-upload__preview')
+  mainImgContainer: document.querySelector('.img-upload__preview'),
+  mainImg: document.querySelector('.img-upload__preview img')
 };
 
 var openEditImgForm = function () {
@@ -228,7 +229,7 @@ var resizeImage = function (minusOrPlus) {
   }
   document.querySelector('.img-upload__scale .scale__control--value').value = imgSizeValue + '%';
   resizeControl.valueString = imgSizeValue + '%';
-  editImgForm.mainImg.style.transform = 'scale(' + imgSizeValue / 100 + ')';
+  editImgForm.mainImgContainer.style.transform = 'scale(' + imgSizeValue / 100 + ')';
 };
 
 resizeControl.minus.addEventListener('click', function () {
@@ -238,3 +239,73 @@ resizeControl.minus.addEventListener('click', function () {
 resizeControl.plus.addEventListener('click', function () {
   resizeImage(resizeControl.plus);
 });
+
+var checkFilterClasses = function (constCssClass) {
+  var differentCssClasses = editImgForm.mainImg.classList;
+  var differentCssClassesLength = differentCssClasses.length;
+
+  if (differentCssClassesLength === 1 && differentCssClasses[0] === constCssClass) {
+    return;
+  }
+
+  for (var i = 0; i < differentCssClassesLength; i++) {
+    differentCssClasses.remove(differentCssClasses[i]);
+  }
+
+  differentCssClasses.add(constCssClass);
+}
+
+var effects = [
+  document.querySelector('#effect-none'),
+  document.querySelector('#effect-chrome'),
+  document.querySelector('#effect-sepia'),
+  document.querySelector('#effect-marvin'),
+  document.querySelector('#effect-phobos'),
+  document.querySelector('#effect-heat')
+];
+
+effects[0].addEventListener('click', function () {
+  checkFilterClasses('effects__preview--none');
+});
+
+effects[1].addEventListener('click', function () {
+  checkFilterClasses('effects__preview--chrome');
+});
+
+effects[2].addEventListener('click', function () {
+  checkFilterClasses('effects__preview--sepia');
+});
+
+effects[3].addEventListener('click', function () {
+  checkFilterClasses('effects__preview--marvin');
+});
+
+effects[4].addEventListener('click', function () {
+  checkFilterClasses('effects__preview--phobos');
+});
+
+effects[5].addEventListener('click', function () {
+  checkFilterClasses('effects__preview--heat');
+});
+
+// var effectRange = document.querySelector('.effect-level__value');
+// var effectLine = document.querySelector('.effect-level__line');
+
+// var coordsEffectLine = effectLine.getBoundingClientRect();
+// var coordsEffectRange = effectRange.getBoundingClientRect();
+
+// var effectIntensityPercent = function () {
+//   var maxLength = coordsEffectLine.right - coordsEffectLine.left;
+//   var rangeMargin = coordsEffectRange.x - coordsEffectLine.left;
+//   var percent = rangeMargin * 100 / maxLength;
+//   return percent;
+// };
+
+// effectRange.addEventListener('mouseup', function () {
+//   effectIntensityPercent();
+//   editImgForm.mainImg.style.filter = '';
+
+// });
+
+var effectRange = document.querySelector('effect-level__pin');
+var effectValue = document.querySelector('effect-level__value');
