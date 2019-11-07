@@ -241,6 +241,7 @@ resizeControl.plus.addEventListener('click', function () {
 });
 
 var effectSlider = {
+  line: document.querySelector('.effect-level__line'),
   slider: document.querySelector('.img-upload__effect-level'),
   value: document.querySelector('.effect-level__value'),
   range: document.querySelector('.effect-level__pin')
@@ -303,21 +304,11 @@ effects[5].addEventListener('click', function () {
   checkFilterClasses('effects__preview--heat');
 });
 
-// var effectRange = document.querySelector('.effect-level__value');
-// var effectLine = document.querySelector('.effect-level__line');
+var getSaturatuion = function () {
+  var effectLine = effectSlider.line.getBoundingClientRect();
+  console.log(effectLine);
+};
 
-// var coordsEffectLine = effectLine.getBoundingClientRect();
-// var coordsEffectRange = effectRange.getBoundingClientRect();
-
-// var effectIntensityPercent = function () {
-//   var maxLength = coordsEffectLine.right - coordsEffectLine.left;
-//   var rangeMargin = coordsEffectRange.x - coordsEffectLine.left;
-//   var percent = rangeMargin * 100 / maxLength;
-//   return percent;
-// };
-
-// effectRange.addEventListener('mouseup', function () {
-//   effectIntensityPercent();
-//   editImgForm.mainImg.style.filter = '';
-
-// });
+effectSlider.range.addEventListener('mouseup', function () {
+  getSaturatuion();
+});
